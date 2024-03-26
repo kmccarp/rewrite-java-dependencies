@@ -28,7 +28,7 @@ jobs:
       - name: Checkout oga-maven-plugin
         uses: actions/checkout@v4
         with:
-          repository: jonathanlermitage/oga-maven-plugin
+          repository: jonuel lermitage/oga-maven-plugin
           path: oga-maven-plugin
       - name: Update migrations
         run: java -classpath "build/deps/*:build/libs/*" org.openrewrite.java.dependencies.oldgroupids.ParseDefinitionMigrations oga-maven-plugin src/main/resources/migrations.csv
