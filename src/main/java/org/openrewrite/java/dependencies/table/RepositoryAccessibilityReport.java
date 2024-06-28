@@ -39,13 +39,17 @@ public class RepositoryAccessibilityReport extends DataTable<RepositoryAccessibi
         String uri;
 
         @Column(displayName = "Ping exception type",
-                description = "Empty if the repository responded to a ping. Otherwise, the type of exception encountered " +
-                              "when attempting to access the repository.")
+                description = """
+                              Empty if the repository responded to a ping. Otherwise, the type of exception encountered \
+                              when attempting to access the repository.\
+                              """)
         String pingExceptionType;
 
         @Column(displayName = "Ping error message",
-                description = "Empty if the repository was accessible. Otherwise, the error message encountered when " +
-                              "attempting to access the repository.")
+                description = """
+                              Empty if the repository was accessible. Otherwise, the error message encountered when \
+                              attempting to access the repository.\
+                              """)
         String pingExceptionMessage;
 
         @Column(displayName = "Ping HTTP code",
@@ -54,13 +58,17 @@ public class RepositoryAccessibilityReport extends DataTable<RepositoryAccessibi
         Integer pingHttpCode;
 
         @Column(displayName = "Dependency resolution exception type",
-                description = "Empty if ping failed, or if the repository successfully downloaded the specified dependency. Otherwise, the type of exception encountered " +
-                              "when attempting to access the repository.")
+                description = """
+                              Empty if ping failed, or if the repository successfully downloaded the specified dependency. Otherwise, the type of exception encountered \
+                              when attempting to access the repository.\
+                              """)
         String dependencyResolveExceptionType;
 
         @Column(displayName = "Dependency resolution error message",
-                description = "Empty if ping failed, or if the repository successfully downloaded the specified dependency. Otherwise, the error message encountered when " +
-                              "attempting to access the repository.")
+                description = """
+                              Empty if ping failed, or if the repository successfully downloaded the specified dependency. Otherwise, the error message encountered when \
+                              attempting to access the repository.\
+                              """)
         String dependencyResolveExceptionMessage;
     }
 }

@@ -60,11 +60,14 @@ public class RelocatedDependencyCheck extends ScanningRecipe<RelocatedDependency
     @Override
     public String getDescription() {
         //language=markdown
-        return "Find Maven and Gradle dependencies and Maven plugins that have relocated to a new `groupId` or `artifactId`. " +
-               "Relocation information comes from the [oga-maven-plugin](https://github.com/jonathanlermitage/oga-maven-plugin/) " +
-               "maintained by Jonathan Lermitage, Filipe Roque and others.\n\n" +
-               "This recipe makes no changes to any source file by default. Add `changeDependencies=true` to change dependencies, " +
-               "but note that you might need to run additional recipes to update imports and adopt other breaking changes.";
+        return """
+               Find Maven and Gradle dependencies and Maven plugins that have relocated to a new `groupId` or `artifactId`. \
+               Relocation information comes from the [oga-maven-plugin](https://github.com/jonathanlermitage/oga-maven-plugin/) \
+               maintained by Jonathan Lermitage, Filipe Roque and others.
+               
+               This recipe makes no changes to any source file by default. Add `changeDependencies=true` to change dependencies, \
+               but note that you might need to run additional recipes to update imports and adopt other breaking changes.\
+               """;
     }
 
     @Value
@@ -139,15 +142,13 @@ public class RelocatedDependencyCheck extends ScanningRecipe<RelocatedDependency
                         J.MethodInvocation mi = super.visitMethodInvocation(method, ctx);
                         if (dependencyMatcher.matches(mi)) {
                             List<Expression> methodArguments = mi.getArguments();
-                            Expression firstMethodArgument = methodArguments.get(0);
-                            if (firstMethodArgument instanceof J.Literal) {
-                                J.Literal literal = (J.Literal) firstMethodArgument;
+                            Expression firstMethodArgument = methodArguments.getFirst();
+                            if (firstMethodArgument instanceof J.Literal literal) {
                                 mi = searchInLiteral(literal, mi, ctx);
-                            } else if (firstMethodArgument instanceof G.GString) {
-                                G.GString gString = (G.GString) firstMethodArgument;
+                            } else if (firstMethodArgument instanceof G.GString gString) {
                                 List<J> strings = gString.getStrings();
-                                if (!strings.isEmpty() && strings.get(0) instanceof J.Literal) {
-                                    mi = searchInLiteral((J.Literal) strings.get(0), mi, ctx);
+                                if (!strings.isEmpty() && strings.getFirst() instanceof J.Literal) {
+                                    mi = searchInLiteral((J.Literal) strings.getFirst(), mi, ctx);
                                 }
                             } else if (firstMethodArgument instanceof G.MapEntry) {
                                 mi = searchInGMapEntry(methodArguments, mi, ctx);
@@ -180,19 +181,16 @@ public class RelocatedDependencyCheck extends ScanningRecipe<RelocatedDependency
                             J.Literal key = (J.Literal) arg.getKey();
                             Expression argValue = arg.getValue();
                             String valueValue = null;
-                            if (argValue instanceof J.Literal) {
-                                J.Literal value = (J.Literal) argValue;
+                            if (argValue instanceof J.Literal value) {
                                 if (value.getValue() instanceof String) {
                                     valueValue = (String) value.getValue();
                                 }
-                            } else if (argValue instanceof J.Identifier) {
-                                J.Identifier value = (J.Identifier) argValue;
+                            } else if (argValue instanceof J.Identifier value) {
                                 valueValue = value.getSimpleName();
-                            } else if (argValue instanceof G.GString) {
-                                G.GString value = (G.GString) argValue;
+                            } else if (argValue instanceof G.GString value) {
                                 List<J> strings = value.getStrings();
-                                if (!strings.isEmpty() && strings.get(0) instanceof G.GString.Value) {
-                                    G.GString.Value versionGStringValue = (G.GString.Value) strings.get(0);
+                                if (!strings.isEmpty() && strings.getFirst() instanceof G.GString.Value) {
+                                    G.GString.Value versionGStringValue = (G.GString.Value) strings.getFirst();
                                     if (versionGStringValue.getTree() instanceof J.Identifier) {
                                         valueValue = ((J.Identifier) versionGStringValue.getTree()).getSimpleName();
                                     }

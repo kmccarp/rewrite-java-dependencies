@@ -54,9 +54,11 @@ public class FindMinimumDependencyVersion extends ScanningRecipe<Map<GroupArtifa
     String artifactIdPattern;
 
     @Option(displayName = "Version",
-            description = "Match only dependencies with the specified version. " +
-                          "Node-style [version selectors](https://docs.openrewrite.org/reference/dependency-version-selectors) may be used. " +
-                          "All versions are searched by default.",
+            description = """
+                          Match only dependencies with the specified version. \
+                          Node-style [version selectors](https://docs.openrewrite.org/reference/dependency-version-selectors) may be used. \
+                          All versions are searched by default.\
+                          """,
             example = "1.x",
             required = false)
     @Nullable
@@ -69,12 +71,14 @@ public class FindMinimumDependencyVersion extends ScanningRecipe<Map<GroupArtifa
 
     @Override
     public String getDescription() {
-        return "The oldest dependency version in use is the lowest dependency " +
-               "version in use in any source set of any subproject of " +
-               "a repository. It is possible that, for example, the main " +
-               "source set of a project uses Jackson 2.11, but a test source set " +
-               "uses Jackson 2.16. In this case, the oldest Jackson version in use is " +
-               "Java 2.11.";
+        return """
+               The oldest dependency version in use is the lowest dependency \
+               version in use in any source set of any subproject of \
+               a repository. It is possible that, for example, the main \
+               source set of a project uses Jackson 2.11, but a test source set \
+               uses Jackson 2.16. In this case, the oldest Jackson version in use is \
+               Java 2.11.\
+               """;
     }
 
     @Override

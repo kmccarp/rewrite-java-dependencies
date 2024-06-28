@@ -34,8 +34,10 @@ public class DependencyInsight extends Recipe {
 
     @Override
     public String getDescription() {
-        return "Finds dependencies, including transitive dependencies, in both Gradle and Maven projects. " +
-               "Matches within all Gradle dependency configurations and Maven scopes.";
+        return """
+               Finds dependencies, including transitive dependencies, in both Gradle and Maven projects. \
+               Matches within all Gradle dependency configurations and Maven scopes.\
+               """;
     }
 
     @Option(displayName = "Group pattern",
@@ -49,9 +51,11 @@ public class DependencyInsight extends Recipe {
     String artifactIdPattern;
 
     @Option(displayName = "Version",
-            description = "Match only dependencies with the specified version. " +
-                          "Node-style [version selectors](https://docs.openrewrite.org/reference/dependency-version-selectors) may be used. " +
-                          "All versions are searched by default.",
+            description = """
+                          Match only dependencies with the specified version. \
+                          Node-style [version selectors](https://docs.openrewrite.org/reference/dependency-version-selectors) may be used. \
+                          All versions are searched by default.\
+                          """,
             example = "1.x",
             required = false)
     @Nullable

@@ -39,8 +39,10 @@ public class DependencyList extends Recipe {
     Scope scope;
 
     @Option(displayName = "Include transitive dependencies",
-            description = "Whether or not to include transitive dependencies in the report. " +
-                    "Defaults to including only direct dependencies.",
+            description = """
+                    Whether or not to include transitive dependencies in the report. \
+                    Defaults to including only direct dependencies.\
+                    """,
             example = "true")
     boolean includeTransitive;
 
@@ -51,8 +53,10 @@ public class DependencyList extends Recipe {
 
     @Override
     public String getDescription() {
-        return "Emits a data table detailing all Gradle and Maven dependencies." +
-                "This recipe makes no changes to any source file.";
+        return """
+                Emits a data table detailing all Gradle and Maven dependencies.\
+                This recipe makes no changes to any source file.\
+                """;
     }
 
     @Override

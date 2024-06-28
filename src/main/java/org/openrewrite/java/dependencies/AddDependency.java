@@ -43,8 +43,10 @@ public class AddDependency extends ScanningRecipe<AddDependency.Accumulator> {
     String version;
 
     @Option(displayName = "Version pattern",
-            description = "Allows version selection to be extended beyond the original Node Semver semantics. So for example, " +
-                          "Setting 'version' to \"25-29\" can be paired with a metadata pattern of \"-jre\" to select Guava 29.0-jre",
+            description = """
+                          Allows version selection to be extended beyond the original Node Semver semantics. So for example, \
+                          Setting 'version' to "25-29" can be paired with a metadata pattern of "-jre" to select Guava 29.0-jre\
+                          """,
             example = "-jre",
             required = false)
     @Nullable
@@ -65,8 +67,10 @@ public class AddDependency extends ScanningRecipe<AddDependency.Accumulator> {
     String classifier;
 
     @Option(displayName = "Family pattern",
-            description = "A pattern, applied to groupIds, used to determine which other dependencies should have aligned version numbers. " +
-                          "Accepts '*' as a wildcard character.",
+            description = """
+                          A pattern, applied to groupIds, used to determine which other dependencies should have aligned version numbers. \
+                          Accepts '*' as a wildcard character.\
+                          """,
             example = "com.fasterxml.jackson*",
             required = false)
     @Nullable
@@ -81,10 +85,12 @@ public class AddDependency extends ScanningRecipe<AddDependency.Accumulator> {
     String extension;
 
     @Option(displayName = "Gradle configuration",
-            description = "The Gradle dependency configuration name within which to place the dependency. " +
-                          "When omitted the configuration will be determined by the Maven scope parameter. " +
-                          "If that parameter is also omitted, configuration will be determined based on where types " +
-                          "matching `onlyIfUsing` appear in source code.",
+            description = """
+                          The Gradle dependency configuration name within which to place the dependency. \
+                          When omitted the configuration will be determined by the Maven scope parameter. \
+                          If that parameter is also omitted, configuration will be determined based on where types \
+                          matching `onlyIfUsing` appear in source code.\
+                          """,
             example = "implementation",
             required = false)
     @Nullable
@@ -92,8 +98,10 @@ public class AddDependency extends ScanningRecipe<AddDependency.Accumulator> {
 
     // Maven only parameters
     @Option(displayName = "Maven scope",
-            description = "The Maven scope within which to place the dependency. " +
-                          "When omitted scope will be determined based on where types matching `onlyIfUsing` appear in source code.",
+            description = """
+                          The Maven scope within which to place the dependency. \
+                          When omitted scope will be determined based on where types matching `onlyIfUsing` appear in source code.\
+                          """,
             example = "runtime",
             valid = {"compile", "provided", "runtime", "test"},
             required = false)
@@ -134,9 +142,11 @@ public class AddDependency extends ScanningRecipe<AddDependency.Accumulator> {
 
     @Override
     public String getDescription() {
-        return "For a Gradle project, add a gradle dependency to a `build.gradle` file in the correct configuration " +
-               "based on where it is used. Or For a maven project, Add a Maven dependency to a `pom.xml` file in the " +
-               "correct scope based on where it is used.";
+        return """
+               For a Gradle project, add a gradle dependency to a `build.gradle` file in the correct configuration \
+               based on where it is used. Or For a maven project, Add a Maven dependency to a `pom.xml` file in the \
+               correct scope based on where it is used.\
+               """;
     }
 
     @Override

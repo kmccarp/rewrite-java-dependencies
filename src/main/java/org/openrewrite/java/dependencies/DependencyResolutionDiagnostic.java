@@ -54,43 +54,53 @@ public class DependencyResolutionDiagnostic extends ScanningRecipe<DependencyRes
     @Override
     public String getDescription() {
         //language=markdown
-        return "Recipes which manipulate dependencies must be able to successfully access the artifact repositories " +
-               "and resolve dependencies from them. This recipe produces two data tables used to understand the state " +
-               "of dependency resolution. \n\n" +
-               "The Repository accessibility report lists all the artifact repositories known to the project and whether " +
-               "respond to network access. The network access is attempted while the recipe is run and so is " +
-               "representative of current conditions. \n\n" +
-               "The Gradle dependency configuration errors lists all the dependency configurations that failed to " +
-               "resolve one or more dependencies when the project was parsed. This is representative of conditions at " +
-               "the time the LST was parsed.";
+        return """
+               Recipes which manipulate dependencies must be able to successfully access the artifact repositories \
+               and resolve dependencies from them. This recipe produces two data tables used to understand the state \
+               of dependency resolution.\s
+               
+               The Repository accessibility report lists all the artifact repositories known to the project and whether \
+               respond to network access. The network access is attempted while the recipe is run and so is \
+               representative of current conditions.\s
+               
+               The Gradle dependency configuration errors lists all the dependency configurations that failed to \
+               resolve one or more dependencies when the project was parsed. This is representative of conditions at \
+               the time the LST was parsed.\
+               """;
     }
 
 
     @Option(displayName = "Group ID",
-            description = "The group ID of a dependency to attempt to download from the repository. " +
-                          "Default value is \"com.fasterxml.jackson.core\". " +
-                          "If this dependency is not found in the repository the error will be noted in the report. " +
-                          "There is no need to specify an alternate value for this parameter unless the repository is known not to contain jackson-core.",
+            description = """
+                          The group ID of a dependency to attempt to download from the repository. \
+                          Default value is "com.fasterxml.jackson.core". \
+                          If this dependency is not found in the repository the error will be noted in the report. \
+                          There is no need to specify an alternate value for this parameter unless the repository is known not to contain jackson-core.\
+                          """,
             example = "com.fasterxml.jackson.core",
             required = false)
     @Nullable
     String groupId;
 
     @Option(displayName = "Artifact ID",
-            description = "The artifact ID of a dependency to attempt to download from the repository. " +
-                          "Default value is \"jackson-core\". " +
-                          "If this dependency is not found in the repository the error will be noted in the report. " +
-                          "There is no need to specify an alternate value for this parameter unless the repository is known not to contain jackson-core.",
+            description = """
+                          The artifact ID of a dependency to attempt to download from the repository. \
+                          Default value is "jackson-core". \
+                          If this dependency is not found in the repository the error will be noted in the report. \
+                          There is no need to specify an alternate value for this parameter unless the repository is known not to contain jackson-core.\
+                          """,
             example = "jackson-core",
             required = false)
     @Nullable
     String artifactId;
 
     @Option(displayName = "Version",
-            description = "The version of a dependency to attempt to download from the repository. " +
-                          "Default value is \"2.16.0\". " +
-                          "If this dependency is not found in the repository the error will be noted in the report. " +
-                          "There is no need to specify an alternate value for this parameter unless the repository is known not to contain jackson-core.",
+            description = """
+                          The version of a dependency to attempt to download from the repository. \
+                          Default value is "2.16.0". \
+                          If this dependency is not found in the repository the error will be noted in the report. \
+                          There is no need to specify an alternate value for this parameter unless the repository is known not to contain jackson-core.\
+                          """,
             example = "2.16.0",
             required = false)
     @Nullable
@@ -219,8 +229,8 @@ public class DependencyResolutionDiagnostic extends ScanningRecipe<DependencyRes
         Integer pingHttpResponseCode = null;
         String pingExceptionClass = "";
         String pingExceptionMessage = "";
-        if (pingThrowable instanceof MavenPomDownloader.HttpSenderResponseException) {
-            pingHttpResponseCode = ((MavenPomDownloader.HttpSenderResponseException) pingThrowable).getResponseCode();
+        if (pingThrowable instanceof MavenPomDownloader.HttpSenderResponseException exception) {
+            pingHttpResponseCode = exception.getResponseCode();
             pingThrowable = pingThrowable.getCause();
         }
         if (pingThrowable instanceof UncheckedIOException) {
@@ -256,7 +266,7 @@ public class DependencyResolutionDiagnostic extends ScanningRecipe<DependencyRes
             public G.CompilationUnit visitCompilationUnit(G.CompilationUnit cu, ExecutionContext ctx) {
 
                 Optional<GradleProject> maybeGp = cu.getMarkers().findFirst(GradleProject.class);
-                if (!maybeGp.isPresent()) {
+                if (maybeGp.isEmpty()) {
                     return cu;
                 }
                 GradleProject gp = maybeGp.get();
@@ -281,7 +291,7 @@ public class DependencyResolutionDiagnostic extends ScanningRecipe<DependencyRes
                     return tree;
                 }
                 SourceFile s = (SourceFile) tree;
-                if (s.getSourcePath().endsWith("build.gradle") && !s.getMarkers().findFirst(GradleProject.class).isPresent()) {
+                if (s.getSourcePath().endsWith("build.gradle") && s.getMarkers().findFirst(GradleProject.class).isEmpty()) {
                     if (s.getMarkers().getMarkers().stream().anyMatch(marker -> "org.openrewrite.gradle.marker.GradleProject".equals(marker.getClass().getName()))) {
                         s = Markup.error(s, new IllegalStateException(
                                 s.getSourcePath() + " has a GradleProject marker, but it is loaded by a different classloader than the recipe."));
@@ -289,7 +299,7 @@ public class DependencyResolutionDiagnostic extends ScanningRecipe<DependencyRes
                         s = Markup.warn(s, new IllegalStateException(
                                 s.getSourcePath() + " is a Gradle build file, but it is missing a GradleProject marker."));
                     }
-                } else if (s.getSourcePath().endsWith("pom.xml") && !s.getMarkers().findFirst(MavenResolutionResult.class).isPresent()) {
+                } else if (s.getSourcePath().endsWith("pom.xml") && s.getMarkers().findFirst(MavenResolutionResult.class).isEmpty()) {
                     if (s.getMarkers().getMarkers().stream().anyMatch(marker -> "org.openrewrite.maven.tree.MavenResolutionResult".equals(marker.getClass().getName()))) {
                         s = Markup.error(s, new IllegalStateException(
                                 s.getSourcePath() + " has a MavenResolutionResult marker, but it is loaded by a different classloader than the recipe."));
